@@ -118,5 +118,53 @@ namespace DatingApp.API.Data
         {
             return await _context.SaveChangesAsync() > 0;
         }
+
+        public async Task<Message> GetMessage(int id)
+        {
+            return await _context.Messages.FirstOrDefaultAsync(x => x.Id == id);
+        }
+
+        public async Task<PagedList<Message>> GetMessagesForUser(MessageParams messageParams)
+        {
+            var messagesQuery = _context.Messages
+                .Include(x => x.Sender).ThenInclude(x => x.Photos)
+                .Include(x => x.Recipient).ThenInclude(x => x.Photos)
+                .AsQueryable();
+
+            // anti-pattern from udemy course [*]
+            switch (messageParams.MessageContainer)
+            {
+                case "Inbox":
+                    messagesQuery = messagesQuery
+                        .Where(x => x.RecipientId == messageParams.UserId)
+                        .Where(x => x.RecipientDeleted == false);
+                break;
+                case "Outbox":
+                    messagesQuery = messagesQuery
+                        .Where(x => x.SenderId == messageParams.UserId)
+                        .Where(x => x.SenderDeleted == false);
+                break;
+                default:
+                    messagesQuery = messagesQuery
+                        .Where(x => x.RecipientId == messageParams.UserId)
+                        .Where(x => x.RecipientDeleted == false)
+                        .Where(x => x.IsRead == false);
+                break;
+            }
+
+            messagesQuery = messagesQuery.OrderByDescending(x => x.MessageSent);
+            return await PagedList<Message>.CreateAsync(messagesQuery, messageParams.PageNumber, messageParams.PageSize);
+        }
+
+        public async Task<IEnumerable<Message>> GetMessageThread(int userId, int recipientId)
+        {
+            return await _context.Messages
+                .Include(x => x.Sender).ThenInclude(x => x.Photos)
+                .Include(x => x.Recipient).ThenInclude(x => x.Photos)
+                .Where(x => (x.RecipientId == userId && x.SenderId == recipientId && x.RecipientDeleted == false)
+                    || (x.RecipientId == recipientId && x.SenderId == userId && x.SenderDeleted == false))
+                .OrderByDescending(x => x.MessageSent)
+                .ToListAsync();
+        }
     }
 }
