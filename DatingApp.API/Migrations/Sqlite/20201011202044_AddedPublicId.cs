@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace DatingApp.API.Migrations
+namespace DatingApp.API.Migrations.Sqlite
 {
     public partial class AddedPublicId : Migration
     {

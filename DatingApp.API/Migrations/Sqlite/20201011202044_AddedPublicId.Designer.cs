@@ -6,11 +6,11 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace DatingApp.API.Migrations
+namespace DatingApp.API.Migrations.Sqlite
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20201009163729_ExtendedUserClass")]
-    partial class ExtendedUserClass
+    [Migration("20201011202044_AddedPublicId")]
+    partial class AddedPublicId
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -32,6 +32,9 @@ namespace DatingApp.API.Migrations
 
                     b.Property<bool>("IsMain")
                         .HasColumnType("INTEGER");
+
+                    b.Property<string>("PublicId")
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Url")
                         .HasColumnType("TEXT");

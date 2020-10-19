@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace DatingApp.API.Migrations
+namespace DatingApp.API.Migrations.Sqlite
 {
     [DbContext(typeof(DataContext))]
     [Migration("20200906110711_AddedUserEntity")]

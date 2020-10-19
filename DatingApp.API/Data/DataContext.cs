@@ -1,11 +1,23 @@
+using DatingApp.API.Helpers;
 using DatingApp.API.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 namespace DatingApp.API.Data
 {
     public class DataContext : DbContext
     {
-        public DataContext(DbContextOptions<DataContext> options) : base(options) {}
+        protected readonly IConfiguration Configuration;
+        
+        public DataContext(IConfiguration configuration)
+        {
+            Configuration = configuration;
+        }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder options)
+        {
+            options.UseSqlite(Configuration.GetConnectionString(ConfigurationName.DefaultConnection));
+        }
 
         public DbSet<Value> Values { get; set; }
         public DbSet<User> Users { get; set; }

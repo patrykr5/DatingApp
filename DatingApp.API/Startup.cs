@@ -32,13 +32,25 @@ namespace DatingApp.API
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
+        public void ConfigureDevelopmentServices(IServiceCollection services)
+        {
+            services.AddDbContext<DataContext>();
+
+            ConfigureServices(services);
+        }
+
+        public void ConfigureProductionServices(IServiceCollection services)
+        {
+            services.AddDbContext<DataContext, SqlServerDataContext>();
+
+            ConfigureServices(services);
+        }
+
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<DataContext>(x => x.UseSqlite(Configuration.GetConnectionString("DefaultConnection")));
             services.AddControllers();
             services.AddCors();
-            services.Configure<CloudinarySettings>(Configuration.GetSection("CloudinarySettings"));
+            services.Configure<CloudinarySettings>(Configuration.GetSection(ConfigurationName.CloudinarySettings));
             services.AddAutoMapper(typeof(DatingRepository).Assembly);
             services.AddScoped<IAuthRepository, AuthRepository>();
             services.AddScoped<IDatingRepository, DatingRepository>();
@@ -83,7 +95,7 @@ namespace DatingApp.API
 
             app.UseRouting();
 
-            app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()); // x.WithOrigins("http://localhost:4200")
+            app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 
             app.UseAuthentication();
             app.UseAuthorization();
