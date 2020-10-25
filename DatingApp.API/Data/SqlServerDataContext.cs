@@ -5,7 +5,7 @@ using Microsoft.Extensions.Configuration;
 namespace DatingApp.API.Data
 {
     public class SqlServerDataContext : DataContext
-    {        
+    {
         public SqlServerDataContext(IConfiguration configuration) : base(configuration)
         {
         }

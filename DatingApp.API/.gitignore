@@ -1,7 +1,8 @@
-.vscode
+.vs*
 bin
 obj
 *.db
 appsettings.json
 wwwroot
 appsettings.Development.json
+*.sln

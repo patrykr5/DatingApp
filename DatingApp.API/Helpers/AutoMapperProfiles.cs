@@ -35,7 +35,7 @@ namespace DatingApp.API.Helpers
                 .ForMember(x => x.SenderPhotoUrl,
                     opt => opt.MapFrom(src => src.Sender.Photos.Where(p => p.IsMain).Select(x => x.Url).FirstOrDefault() ?? string.Empty))
                 .ForMember(x => x.RecipientPhotoUrl,
-                    opt => opt.MapFrom(src => src.Recipient.Photos.Where(p => p.IsMain).Select(x => x.Url).FirstOrDefault() ?? string.Empty));;
+                    opt => opt.MapFrom(src => src.Recipient.Photos.Where(p => p.IsMain).Select(x => x.Url).FirstOrDefault() ?? string.Empty));
         }
     }
 }

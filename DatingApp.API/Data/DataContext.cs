@@ -8,7 +8,7 @@ namespace DatingApp.API.Data
     public class DataContext : DbContext
     {
         protected readonly IConfiguration Configuration;
-        
+
         public DataContext(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -30,7 +30,7 @@ namespace DatingApp.API.Data
         {
             modelBuilder.Entity<Like>()
                 .HasKey(k => new { k.LikerId, k.LikeeId });
-                
+
             modelBuilder.Entity<Like>()
                 .HasOne(u => u.Likee)
                 .WithMany(u => u.Likers)

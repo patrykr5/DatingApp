@@ -45,7 +45,7 @@ namespace DatingApp.API.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetMessagesForUser(int userId, [FromQuery]MessageParams messageParams)
+        public async Task<IActionResult> GetMessagesForUser(int userId, [FromQuery] MessageParams messageParams)
         {
             if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
             {
@@ -58,7 +58,7 @@ namespace DatingApp.API.Controllers
 
             Response.AddPagination(messagesFromRepo.CurrentPage, messagesFromRepo.PageSize,
                 messagesFromRepo.TotalCount, messagesFromRepo.TotalPages);
-            
+
             return Ok(messages);
         }
 
@@ -96,7 +96,7 @@ namespace DatingApp.API.Controllers
             if (recipient == null)
             {
                 return BadRequest("Could not find user");
-            } 
+            }
 
             var message = _mapper.Map<Message>(messageForCreationDto);
             _repo.Add(message);
@@ -132,7 +132,7 @@ namespace DatingApp.API.Controllers
 
             if (messageFromRepo.SenderDeleted && messageFromRepo.RecipientDeleted)
             {
-                _repo.Delete<Message>(messageFromRepo);
+                _repo.Delete(messageFromRepo);
             }
 
             if (await _repo.SaveAll())

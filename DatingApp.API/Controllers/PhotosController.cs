@@ -43,14 +43,13 @@ namespace DatingApp.API.Controllers
         public async Task<IActionResult> GetPhoto(int id)
         {
             var photoFromRepo = await _repo.GetPhoto(id);
-
             var photo = _mapper.Map<PhotoForReturnDto>(photoFromRepo);
 
             return Ok(photo);
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddPhotoForUser(int userId, [FromForm]PhotoForCreationDto photoForCreationDto)
+        public async Task<IActionResult> AddPhotoForUser(int userId, [FromForm] PhotoForCreationDto photoForCreationDto)
         {
             if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
             {
@@ -58,7 +57,6 @@ namespace DatingApp.API.Controllers
             }
 
             var userFromRepo = await _repo.GetUser(userId);
-
             var file = photoForCreationDto.File;
             var uploadResult = new ImageUploadResult();
 
@@ -87,7 +85,7 @@ namespace DatingApp.API.Controllers
                 photo.IsMain = true;
             }
 
-            userFromRepo.Photos.Add(photo);            
+            userFromRepo.Photos.Add(photo);
 
             if (await _repo.SaveAll())
             {
@@ -119,7 +117,6 @@ namespace DatingApp.API.Controllers
             }
 
             var currentMainPhoto = await _repo.GetMainPhotoForUser(userId);
-            
             currentMainPhoto.IsMain = false;
             photoFromRepo.IsMain = true;
 
@@ -162,12 +159,12 @@ namespace DatingApp.API.Controllers
                 deletionResult = _cloudinary.Destroy(deletionParams);
                 if (deletionResult.StatusCode == System.Net.HttpStatusCode.OK)
                 {
-                    _repo.Delete<Photo>(photoFromRepo);
+                    _repo.Delete(photoFromRepo);
                 }
             }
             else
             {
-                _repo.Delete<Photo>(photoFromRepo);
+                _repo.Delete(photoFromRepo);
             }
 
             if (await _repo.SaveAll())

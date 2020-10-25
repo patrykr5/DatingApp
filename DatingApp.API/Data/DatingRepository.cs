@@ -85,7 +85,7 @@ namespace DatingApp.API.Data
                         break;
                     default:
                         userQuery = userQuery.OrderByDescending(x => x.LastActive);
-                    break;
+                        break;
                 }
             }
 
@@ -131,18 +131,18 @@ namespace DatingApp.API.Data
                     messagesQuery = messagesQuery
                         .Where(x => x.RecipientId == messageParams.UserId)
                         .Where(x => x.RecipientDeleted == false);
-                break;
+                    break;
                 case "Outbox":
                     messagesQuery = messagesQuery
                         .Where(x => x.SenderId == messageParams.UserId)
                         .Where(x => x.SenderDeleted == false);
-                break;
+                    break;
                 default:
                     messagesQuery = messagesQuery
                         .Where(x => x.RecipientId == messageParams.UserId)
                         .Where(x => x.RecipientDeleted == false)
                         .Where(x => x.IsRead == false);
-                break;
+                    break;
             }
 
             messagesQuery = messagesQuery.OrderByDescending(x => x.MessageSent);
