@@ -16,6 +16,7 @@ namespace DatingApp.API.Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder options)
         {
+            options.UseLazyLoadingProxies();
             options.UseSqlite(Configuration.GetConnectionString(ConfigurationName.DefaultConnection));
         }
 
