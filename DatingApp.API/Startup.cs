@@ -2,6 +2,7 @@ using System.Net;
 using System.Text;
 using AutoMapper;
 using DatingApp.API.Data;
+using DatingApp.API.Data.Interfaces;
 using DatingApp.API.Helpers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;

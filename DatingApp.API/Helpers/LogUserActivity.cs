@@ -1,7 +1,7 @@
 using System;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using DatingApp.API.Data;
+using DatingApp.API.Data.Interfaces;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.DependencyInjection;
 
