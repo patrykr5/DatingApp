@@ -7,17 +7,17 @@ namespace DatingApp.API.Data
 {
     public class DataContext : DbContext
     {
-        protected readonly IConfiguration Configuration;
+        protected readonly IConfiguration configuration;
 
         public DataContext(IConfiguration configuration)
         {
-            Configuration = configuration;
+            this.configuration = configuration;
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder options)
         {
             options.UseLazyLoadingProxies();
-            options.UseSqlite(Configuration.GetConnectionString(ConfigurationName.DefaultConnection));
+            options.UseSqlite(configuration.GetConnectionString(ConfigurationName.DefaultConnection));
         }
 
         public DbSet<Value> Values { get; set; }

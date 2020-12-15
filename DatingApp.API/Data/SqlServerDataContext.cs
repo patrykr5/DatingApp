@@ -13,7 +13,7 @@ namespace DatingApp.API.Data
         protected override void OnConfiguring(DbContextOptionsBuilder options)
         {
             options.UseLazyLoadingProxies();
-            options.UseSqlServer(Configuration.GetConnectionString(ConfigurationName.DefaultConnection));
+            options.UseSqlServer(configuration.GetConnectionString(ConfigurationName.DefaultConnection));
         }
     }
 }

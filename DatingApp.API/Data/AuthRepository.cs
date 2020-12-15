@@ -7,16 +7,16 @@ namespace DatingApp.API.Data
 {
     public class AuthRepository : IAuthRepository
     {
-        private readonly DataContext _context;
+        private readonly DataContext context;
 
         public AuthRepository(DataContext context)
         {
-            _context = context;
+            this.context = context;
         }
 
         public async Task<User> Login(string username, string password)
         {
-            var user = await _context.Users.Include(x => x.Photos).FirstOrDefaultAsync(x => x.Username == username);
+            var user = await context.Users.Include(x => x.Photos).FirstOrDefaultAsync(x => x.Username == username);
 
             if (user == null)
             {
@@ -56,8 +56,8 @@ namespace DatingApp.API.Data
             user.PasswordHash = passwordHash;
             user.PasswordSalt = passwordSalt;
 
-            await _context.Users.AddAsync(user);
-            await _context.SaveChangesAsync();
+            await context.Users.AddAsync(user);
+            await context.SaveChangesAsync();
 
             return user;
         }
@@ -73,7 +73,7 @@ namespace DatingApp.API.Data
 
         public async Task<bool> UserExists(string username)
         {
-            return await _context.Users.AnyAsync(x => x.Username == username);
+            return await context.Users.AnyAsync(x => x.Username == username);
         }
     }
 }

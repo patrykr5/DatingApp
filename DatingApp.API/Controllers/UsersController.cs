@@ -18,28 +18,33 @@ namespace DatingApp.API.Controllers
     [ApiController]
     public class UsersController : ControllerBase
     {
-        private readonly IDatingRepository _repo;
-        private readonly IMapper _mapper;
+        private readonly IDatingRepository datingRepository;
+        private readonly IMapper mapper;
 
-        public UsersController(IDatingRepository repo, IMapper mapper)
+        public UsersController(IDatingRepository datingRepository, IMapper mapper)
         {
-            _mapper = mapper;
-            _repo = repo;
+            this.mapper = mapper;
+            this.datingRepository = datingRepository;
+        }
+
+        public UsersController(IDatingRepository repo)
+        {
+            datingRepository = repo;
         }
 
         [HttpGet]
         public async Task<IActionResult> GetUsers([FromQuery] UserParams userParams)
         {
             var currentUserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            var userFromRepo = await _repo.GetUser(currentUserId);
+            var userFromRepo = await datingRepository.GetUser(currentUserId);
             userParams.UserId = currentUserId;
             if (string.IsNullOrEmpty(userParams.Gender))
             {
                 userParams.Gender = userFromRepo.Gender == "male" ? "female" : "male";
             }
 
-            var users = await _repo.GetUsers(userParams);
-            var userToReturn = _mapper.Map<IEnumerable<UserForListDto>>(users);
+            var users = await datingRepository.GetUsers(userParams);
+            var userToReturn = mapper.Map<IEnumerable<UserForListDto>>(users);
 
             Response.AddPagination(users.CurrentPage, users.PageSize,
                 users.TotalCount, users.TotalPages);
@@ -50,8 +55,8 @@ namespace DatingApp.API.Controllers
         [HttpGet("{id}", Name = "GetUser")]
         public async Task<IActionResult> GetUser(int id)
         {
-            var user = await _repo.GetUser(id);
-            var userToReturn = _mapper.Map<UserForDetailedDto>(user);
+            var user = await datingRepository.GetUser(id);
+            var userToReturn = mapper.Map<UserForDetailedDto>(user);
 
             return Ok(userToReturn);
         }
@@ -64,11 +69,10 @@ namespace DatingApp.API.Controllers
                 return Unauthorized();
             }
 
-            var userFromRepo = await _repo.GetUser(id);
+            var userFromRepo = await datingRepository.GetUser(id);
+            mapper.Map(userForUpdateDto, userFromRepo);
 
-            _mapper.Map(userForUpdateDto, userFromRepo);
-
-            if (await _repo.SaveAll())
+            if (await datingRepository.SaveAll())
             {
                 return NoContent();
             }
@@ -84,24 +88,23 @@ namespace DatingApp.API.Controllers
                 return Unauthorized();
             }
 
-            var like = await _repo.GetLike(id, recipientId);
-
+            var like = await datingRepository.GetLike(id, recipientId);
             if (like != null)
             {
                 return BadRequest("You already like this tuser");
             }
-            if (await _repo.GetUser(recipientId) == null)
+            if (await datingRepository.GetUser(recipientId) == null)
             {
                 return NotFound();
             }
 
-            _repo.Add<Like>(new Like
+            datingRepository.Add(new Like
             {
                 LikerId = id,
                 LikeeId = recipientId
             });
 
-            if (await _repo.SaveAll())
+            if (await datingRepository.SaveAll())
             {
                 return Ok();
             }
