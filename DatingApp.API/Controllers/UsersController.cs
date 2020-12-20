@@ -27,11 +27,6 @@ namespace DatingApp.API.Controllers
             this.datingRepository = datingRepository;
         }
 
-        public UsersController(IDatingRepository repo)
-        {
-            datingRepository = repo;
-        }
-
         [HttpGet]
         public async Task<IActionResult> GetUsers([FromQuery] UserParams userParams)
         {
