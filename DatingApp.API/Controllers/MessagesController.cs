@@ -14,7 +14,7 @@ namespace DatingApp.API.Controllers
 {
     [ServiceFilter(typeof(LogUserActivity))]
     [Authorize]
-    [Route("api/users/{userId}/[controller]")]
+    [Route(ApiRoutes.Messages.Controller)]
     [ApiController]
     public class MessagesController : ControllerBase
     {
@@ -27,7 +27,7 @@ namespace DatingApp.API.Controllers
             this.mapper = mapper;
         }
 
-        [HttpGet("{id}", Name = "GetMessage")]
+        [HttpGet(ApiRoutes.Messages.GetMessage, Name = "GetMessage")]
         public async Task<IActionResult> GetMessage(int userId, int id)
         {
             if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
@@ -62,7 +62,7 @@ namespace DatingApp.API.Controllers
             return Ok(messages);
         }
 
-        [HttpGet("thread/{recipientId}")]
+        [HttpGet(ApiRoutes.Messages.GetMessageThread)]
         public async Task<IActionResult> GetMessageThread(int userId, int recipientId)
         {
             if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
@@ -111,7 +111,7 @@ namespace DatingApp.API.Controllers
             throw new Exception("Creating the message failed on save");
         }
 
-        [HttpPost("{id}")]
+        [HttpPost(ApiRoutes.Messages.DeleteMessage)]
         public async Task<IActionResult> DeleteMessage(int id, int userId)
         {
             if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
@@ -142,7 +142,7 @@ namespace DatingApp.API.Controllers
             throw new Exception("Error deleting the message");
         }
 
-        [HttpPost("{id}/read")]
+        [HttpPost(ApiRoutes.Messages.MarkMessageAsRead)]
         public async Task<IActionResult> MarkMessageAsRead(int userId, int id)
         {
             if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))

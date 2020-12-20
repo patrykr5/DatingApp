@@ -14,7 +14,7 @@ namespace DatingApp.API.Controllers
 {
     [ServiceFilter(typeof(LogUserActivity))]
     [Authorize]
-    [Route("api/[controller]")]
+    [Route(ApiRoutes.DefaultController)]
     [ApiController]
     public class UsersController : ControllerBase
     {
@@ -52,7 +52,7 @@ namespace DatingApp.API.Controllers
             return Ok(userToReturn);
         }
 
-        [HttpGet("{id}", Name = "GetUser")]
+        [HttpGet(ApiRoutes.Users.GetUser, Name = "GetUser")]
         public async Task<IActionResult> GetUser(int id)
         {
             var user = await datingRepository.GetUser(id);
@@ -61,7 +61,7 @@ namespace DatingApp.API.Controllers
             return Ok(userToReturn);
         }
 
-        [HttpPut("{id}")]
+        [HttpPut(ApiRoutes.Users.UpdateUser)]
         public async Task<IActionResult> UpdateUser(int id, UserForUpdateDto userForUpdateDto)
         {
             if (id != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
@@ -80,7 +80,7 @@ namespace DatingApp.API.Controllers
             throw new Exception("Updatating user " + id + " failed on save");
         }
 
-        [HttpPost("{id}/like/{recipientId}")]
+        [HttpPost(ApiRoutes.Users.LikeUser)]
         public async Task<IActionResult> LikeUser(int id, int recipientId)
         {
             if (id != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))

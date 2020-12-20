@@ -15,7 +15,7 @@ using Microsoft.Extensions.Options;
 namespace DatingApp.API.Controllers
 {
     [Authorize]
-    [Route("api/users/{userId}/photos")]
+    [Route(ApiRoutes.Photos.Controller)]
     [ApiController]
     public class PhotosController : ControllerBase
     {
@@ -39,7 +39,7 @@ namespace DatingApp.API.Controllers
             cloudinary = new Cloudinary(account);
         }
 
-        [HttpGet("{id}", Name = "GetPhoto")]
+        [HttpGet(ApiRoutes.Photos.GetPhoto, Name = "GetPhoto")]
         public async Task<IActionResult> GetPhoto(int id)
         {
             var photoFromRepo = await datingRepository.GetPhoto(id);
@@ -96,7 +96,7 @@ namespace DatingApp.API.Controllers
             return BadRequest("Could not add the photo");
         }
 
-        [HttpPost("{id}/setMain")]
+        [HttpPost(ApiRoutes.Photos.SetMainPhoto)]
         public async Task<IActionResult> SetMainPhoto(int userId, int id)
         {
             if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
@@ -128,7 +128,7 @@ namespace DatingApp.API.Controllers
             return BadRequest("Could not set photo to main");
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete(ApiRoutes.Photos.DeletePhoto)]
         public async Task<IActionResult> DeletePhoto(int userId, int id)
         {
             if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))

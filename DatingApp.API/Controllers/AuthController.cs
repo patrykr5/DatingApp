@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using DatingApp.API.Data.Interfaces;
 using DatingApp.API.Dtos;
+using DatingApp.API.Helpers;
 using DatingApp.API.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -13,7 +14,7 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace DatingApp.API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route(ApiRoutes.DefaultController)]
     [ApiController]
     public class AuthController : ControllerBase
     {
@@ -28,7 +29,7 @@ namespace DatingApp.API.Controllers
             this.authRepository = authRepository;
         }
 
-        [HttpPost("register")]
+        [HttpPost(ApiRoutes.Auth.Register)]
         public async Task<IActionResult> Register(UserForRegisterDto userForRegisterDto)
         {
             userForRegisterDto.Username = userForRegisterDto.Username.ToLower();
@@ -45,7 +46,7 @@ namespace DatingApp.API.Controllers
             return CreatedAtRoute("GetUser", new { controller = "Users", id = createdUser.Id }, userToReturn);
         }
 
-        [HttpPost("login")]
+        [HttpPost(ApiRoutes.Auth.Login)]
         public async Task<IActionResult> Login(UserForLoginDto userForLoginDto)
         {
             var userFromRepo = await authRepository.Login(userForLoginDto.Username.ToLower(), userForLoginDto.Password);
